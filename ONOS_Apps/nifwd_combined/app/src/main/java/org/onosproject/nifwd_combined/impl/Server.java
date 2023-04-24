@@ -5,20 +5,12 @@ import java.io.*;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-<<<<<<< HEAD
 import java.util.Scanner;
 import org.onosproject.net.intent.IntentService;
 import org.onosproject.net.intent.IntentState;
 import org.onosproject.net.intent.Intent;
 import org.onosproject.cli.AbstractShellCommand;
-=======
-// Don't need the scanner if we are not taking input to the server from the client
-//import java.util.Scanner;
-//import org.onosproject.net.intent.IntentService;
-//import org.onosproject.net.intent.Intent;
-//import org.onosproject.cli.AbstractShellCommand;
-//import org.onosproject.cli.net.IntentRemoveCommand;
->>>>>>> 3e74f1fa8d6a9b24ac229e4a220b31ac1aa3b9dd
+import org.onosproject.nifwd_combined.impl.PolicyEngine;
 
 
 import gov.nist.csd.pm.exceptions.PMException;
@@ -61,7 +53,7 @@ public class Server {
                 	}
                 	
                 	//Get an instance of the PolicyEngine and create a new policy graph
-			PolicyEngine.getInstance().createPolicyGraph("/home/noah/netviews/ss-netviews/input-files/med-topo-ref/med-topo-policy.json");
+			PolicyEngine.getInstance().createPolicyGraph("/[PATH-TO-NETVIEWS]/ss-netviews/input-files/[POLICY-INFO-FILE.json]");
 			
 		} catch (Exception e) {
 			
