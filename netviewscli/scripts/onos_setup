@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo $ONOS_ROOT
+cp ./deps.json $ONOS_ROOT/deps
+sudo cp ./modules.bzl $ONOS_ROOT/tools/build/bazel
+#cp -r ./np $ONOS_ROOT/apps
+#cp -r ./nifwd $ONOS_ROOT/apps
+cp -r ./ifwd $ONOS_ROOT/apps
+cp -r ./nifwd_combined $ONOS_ROOT/apps
+cd $ONOS_ROOT/tools/build
+sudo -E ./onos-lib-gen
