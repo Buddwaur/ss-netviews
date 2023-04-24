@@ -173,9 +173,9 @@ public class IntentReactiveForwarding {
 		identityMap = new IdentityMap();
 		policyEngine = PolicyEngine.getInstance();
 
-		
-		identityMap.createMapping("/home/noah/netviews/ss-netviews/input-files/med-topo-ref/med-topo-info.json");
-		policyEngine.createPolicyGraph("/home/noah/netviews/ss-netviews/input-files/med-topo-ref/med-topo-policy.json");
+		identityMap.createMapping("/[PATH-TO-NETVIEWS]/ss-netviews/input-files/[TOPOLOGY-INFO-FILE.json]");
+		//identityMap.createMapping("/home/noah/netviews/ss-netviews/input-files/med-topo-ref/med-topo-info.json");
+		policyEngine.createPolicyGraph("/[PATH-TO-NETVIEWS]/ss-netviews/input-files/[POLICY-INFO-FILE.json]");
                 
 
 		TrafficSelector.Builder selector = DefaultTrafficSelector.builder();
