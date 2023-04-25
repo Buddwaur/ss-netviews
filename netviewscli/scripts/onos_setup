@@ -1,11 +1,67 @@
-#!/bin/bash
+#!/bin/sh
+#If you modify this file, make sure to remove windows crlf (if applicable) with dos2unix command
 
-echo $ONOS_ROOT
-cp ./deps.json $ONOS_ROOT/deps
-sudo cp ./modules.bzl $ONOS_ROOT/tools/build/bazel
-#cp -r ./np $ONOS_ROOT/apps
-#cp -r ./nifwd $ONOS_ROOT/apps
-cp -r ./ifwd $ONOS_ROOT/apps
-cp -r ./nifwd_combined $ONOS_ROOT/apps
-cd $ONOS_ROOT/tools/build
-sudo -E ./onos-lib-gen
+#This script will install ONOS & Mininet in the current directory
+CWD=$(pwd)
+
+#Install dependencies
+echo y | sudo apt install python
+echo y | sudo apt install nodejs
+echo y | sudo apt install default-jdk
+
+#Install Bazel
+sudo apt install apt-transport-https curl gnupg -y
+curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg
+sudo mv bazel-archive-keyring.gpg /usr/share/keyrings
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+echo y | sudo apt update 
+echo y | sudo apt install bazel
+#echo y | sudo apt update 
+#echo y | sudo apt full-upgrade
+echo y | sudo apt install bazel-3.0.0
+#echo installed bazel 3.0.0
+
+#At this point, Bazel 3.0.0 should be installed
+
+#Clone Mininet
+git clone https://github.com/mininet/mininet
+cd mininet
+git checkout -b 2.3.0d6
+./util/install.sh -fnv
+cd ..
+
+#At this point, mininet should be installed
+
+echo y | sudo apt install net-tools
+
+#Attempt to clone NetViews repo
+git clone https://github.com/netviews/ss-netviews
+
+#Attempt to install ONOS
+sudo mkdir onos
+cd onos/
+git init
+git remote add origin https://gerrit.onosproject.org/onos
+git pull
+git checkout onos-2.3
+
+#onos-prep-karaf script is throwing erros about changing owner. To resolve this we:
+#Move the same script with the --no-same-owner tag into /tools/package.
+sudo rm ./tools/package/onos-prep-karaf
+sudo chmod +x ../onos-prep-karaf
+sudo cp ../onos-prep-karaf ./tools/package
+
+sudo bazel build onos
+
+#We modified the onos_setup script. This copies our changes over.
+sudo
+cd $CWD
+sudo rm ./ss-netviews/ONOS_Apps/onos_setup
+sudo chmod +x ./onos_setup
+sudo cp ./onos_setup ./ss-netviews/ONOS_Apps
+
+echo 'export ONOS_ROOT=$CWD/onos'
+source '$ONOS_ROOT/tools/dev/bash_profile'
+
+echo 'export ONOS_ROOT=$CWD/onos' >> ~/.bashrc
+echo 'source $ONOS_ROOT/tools/dev/bash_profile' >> ~/.bashrc

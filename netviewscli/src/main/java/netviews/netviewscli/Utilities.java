@@ -48,7 +48,7 @@ public class Utilities {
 
 	public static void serialize(NVWrapper obj) {
 		String output = gson.toJson(obj);
-		System.out.println(output);
+		//System.out.println(output);
 		try {
 			fileWriter = new FileWriter("/[PATH-TO-NETVIEWS]/ss-netviews/input-files/[POLICY-INFO-FILE.json]");
 			//This is for testing
