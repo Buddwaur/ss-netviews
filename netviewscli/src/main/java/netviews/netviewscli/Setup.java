@@ -7,13 +7,19 @@ import java.io.InputStreamReader;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
+/**
+ * Currently this command is not running properly from within a jar file.
+ * There is no way for the jar to understand the relative path and
+ * run the script. This should be fixed at a later time. However, the setup script
+ * for onos works.
+ * 
+ * @author Isaac
+ *
+ */
 @Command(name = "setup", description = "command to setup NetViews with different SDN Controllers", mixinStandardHelpOptions = true)
 public class Setup implements Runnable {
-    // D:\NCSU Related\Cybersecurity
-    // Projects\NetViewsLocal\NVCLI\netviewsCLI\netviewscli\src\main\java\netviews\netviewscli\Setup.java
-    // private final String pathToOnosSetup =
-    // "./netviewscli/src/main/java/netviews/netviewscli/testls.sh";
-    private final String pathToOnosSetup = "../../../../../scripts/setup_original.sh";
+    
+    private final String pathToOnosSetup = "../../../../../scripts/setup.sh";
 
     @Parameters(paramLabel = "<controller>", defaultValue = "onos", description = "name of the SDN controller")
     private final String[] controllers = { "default" };

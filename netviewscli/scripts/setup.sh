@@ -13,14 +13,9 @@ echo y | sudo apt install default-jdk
 sudo apt install apt-transport-https curl gnupg -y
 curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg
 sudo mv bazel-archive-keyring.gpg /usr/share/keyrings
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-echo y | sudo apt update 
-echo y | sudo apt install bazel
-#echo y | sudo apt update 
-#echo y | sudo apt full-upgrade
-echo y | sudo apt install bazel-3.0.0
-#echo installed bazel 3.0.0
-
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list 
+sudo apt update && sudo apt install bazel 
+sudo apt update && sudo apt install bazel-3.0.0
 #At this point, Bazel 3.0.0 should be installed
 
 #Clone Mininet
@@ -34,34 +29,24 @@ cd ..
 
 echo y | sudo apt install net-tools
 
-#Attempt to clone NetViews repo
-git clone https://github.com/netviews/ss-netviews
-
 #Attempt to install ONOS
-sudo mkdir onos
-cd onos/
-git init
-git remote add origin https://gerrit.onosproject.org/onos
-git pull
+git clone https://github.com/opennetworkinglab/onos.git
+cd onos
 git checkout onos-2.3
+bazel build onos
 
 #onos-prep-karaf script is throwing erros about changing owner. To resolve this we:
 #Move the same script with the --no-same-owner tag into /tools/package.
-sudo rm ./tools/package/onos-prep-karaf
-sudo chmod +x ../onos-prep-karaf
-sudo cp ../onos-prep-karaf ./tools/package
+#sudo rm ./tools/package/onos-prep-karaf
+#sudo chmod +x ../onos-prep-karaf
+#sudo cp ../onos-prep-karaf ./tools/package
 
-sudo bazel build onos
+#sudo bazel build onos
 
-#We modified the onos_setup script. This copies our changes over.
-sudo
 cd $CWD
-sudo rm ./ss-netviews/ONOS_Apps/onos_setup
-sudo chmod +x ./onos_setup
-sudo cp ./onos_setup ./ss-netviews/ONOS_Apps
 
-echo 'export ONOS_ROOT=$CWD/onos'
-source '$ONOS_ROOT/tools/dev/bash_profile'
+echo export ONOS_ROOT="$CWD/onos"
+echo source $ONOS_ROOT/tools/dev/bash_profile
 
-echo 'export ONOS_ROOT=$CWD/onos' >> ~/.bashrc
+echo export ONOS_ROOT="$CWD/onos" >> ~/.bashrc
 echo 'source $ONOS_ROOT/tools/dev/bash_profile' >> ~/.bashrc
